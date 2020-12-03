@@ -1,0 +1,56 @@
+In case of Maybe:
+a . Left identity. return a >>= f is equivalent to f a:
+ 
+	return a = Just a
+	return a >>= f  = (Just a)  >>= f
+					= f a
+
+here return a will be Just a 
+>>=f would extract a and apply f on it 
+so return a >>= f will be be equal to f a.
+
+b . Right identity. m >>= return is equivalent to m:
+
+	For m being Nothing
+	Nothing >>= return  = Nothing           // Nothing on binding leads to Nothing
+	(Just a) >>= return  = (return a) = Just a 
+
+
+m can be either Maybe x or Nothing.
+If m is Maybe then >>= would extract x and return would re wrap it to give Just x. 
+Else If m is Nothing then binding would give Nothing.
+
+
+c . Associativity. m >>= f >>= g is equivalent to m >>= (\ x -> f x >>= g)
+	
+	LHS:
+
+	If m is Nothing
+	Nothing >>= f >>= g = Nothing >>= g        // Nothing on binding leads to Nothing
+	                    = Nothing              
+
+	If m is (Just a)
+
+	(Just a) >>= f >>= g = (f a) >>= g
+	If (f a) is Nothing then  (f a) >>= g = Nothing
+	If (f a) = (Just z)  then (f a) >>= g = g z
+
+
+	RHS:
+
+	If m is Nothing
+	Nothing >>= (\ x -> f x >>= g) = Nothing     // Nothing on binding leads to Nothing
+
+	If m is (Just a)
+	(Just a) >>= (\ x -> f x >>= g)  = (f a) >>= g    // >>= extracts a from (Just a) 
+	If (f a) is Nothing then  (f a) >>= g = Nothing
+	If (f a) = (Just z)  then (f a) >>= g = g z
+
+
+First lets see LHS:
+if m is Nothing, then binding with >>f will give Nothing which would furthur give Nothing on binding with >>=g.
+Else if m is Just x, then >>=f would extract x and apply f on it to give Just z, which on binding with >>=g would extract z and apply g on it to give (g z).
+
+Now lets see RHS:
+if m is Nothing then binding will give Nothing.
+Else if m is Just x, then the x would be given to function (\ x -> f x >>= g). f x would give Just z which would on binding with >>= g give (g z).

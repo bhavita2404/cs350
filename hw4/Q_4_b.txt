@@ -1,0 +1,9 @@
+main = getContents >>= print . sum . takeWhile (>= 0) . map read . lines
+
+
+-- this is code for output the sum of the non-negative integers without using the do notation.
+
+
+
+
+// This is a .hs file format and code is of haskell

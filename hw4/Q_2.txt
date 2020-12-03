@@ -1,0 +1,34 @@
+
+The following is the proof of List Monad satisfying the monadic laws.
+
+a . Proof for Left Identity -:
+	Left identity. return a >>= f is equivalent to f a:
+	
+	return a = [a]
+	[a]>>=f  = f a
+
+b . Proof for Right Identity -:
+
+	Right identity. m >>= return is equivalent to m:
+
+	As, m >>= f = [z|(x<-m), (z<-f x)]
+
+	Take f as return,
+	m>>=return  = [x|(x<-m)] = m    as (return x = x)
+
+c . Proof for Associativity -: 
+	Associativity. m >>= f >>= g is equivalent to m >>= (\ x -> f x >>= g)
+	
+	First lets see LHS:
+		m>>=f  = [z|(x<-m), (z<-f x)]
+		m>>=f>>=g = [z| (x<-m), (w<- f x), (z<- g w)]
+
+	RHS:
+		m >>= (\ x -> f x >>= g) = [z | (x<-m), (z<- (\ x -> f x >>= g) x)]
+			                 = [z | (x<-m), (z<- (f x >>= g))]
+     where (f x >>= g) = [a| (z<- (f x)), (a<- g z)]
+
+    m >>= (\ x -> f x >>= g)  = [w | (x<-m), (w<- (f x >>= g))]
+                              = [w | (x<-m), (w<- [a| (z<- (f x)), (a<- g z)])]
+                              = [w | (x<-m), (z<- (f x)), (w<- g z)]
+                              = [z| (x<-m), (w<- f x), (z<- g w)]
